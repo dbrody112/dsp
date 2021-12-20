@@ -1,0 +1,487 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>main</title><meta name="generator" content="MATLAB 9.10"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-12-19"><meta name="DC.source" content="main.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">1.</a></li><li><a href="#3">2.</a></li><li><a href="#4">3.</a></li><li><a href="#5">4.</a></li><li><a href="#6">5.</a></li><li><a href="#7">6.</a></li><li><a href="#8">7.</a></li></ul></div><pre class="codeinput">clc;
+close <span class="string">all</span>;
+
+<span class="comment">%Dan Brody</span>
+<span class="comment">%ECE-310 DSP</span>
+<span class="comment">%Professor Keene</span>
+<span class="comment">%Project 4 : Spectrogram Analysis and Applications</span>
+
+<span class="comment">%close all for html because issue with plots not being in the right section</span>
+
+html = true;
+</pre><h2 id="2">1.</h2><pre class="codeinput"><span class="keyword">if</span> html == true
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+sampling_freq = 5e6;
+chirp_rate = 4e9;
+
+<span class="comment">%chirp sampled at 5Mhz for 200e-6 s where instantaneous freq at t=0 is 0</span>
+<span class="comment">%and chirp rate is 4e9 where chirp rate is (f1-f0)/T</span>
+<span class="comment">%setting T = 1 f0 = 0, t1 = 1, and f1 = 4e9</span>
+
+
+t = 0:1/(5e6):200e-6;
+generated_chirp = chirp(t,0,1,4e9);
+
+spectrogram(generated_chirp,triang(256),255,256, sampling_freq,<span class="string">'yaxis'</span>)
+title(<span class="string">'Discrete Time Linear FM Chirp Signal (Chirp Rate = 4e9)'</span>)
+</pre><img vspace="5" hspace="5" src="main_01.png" alt=""> <h2 id="3">2.</h2><pre class="codeinput"><span class="keyword">if</span> html == true
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+
+
+
+phi = 2*pi*chirp_rate*t.^2;
+
+<span class="comment">%as for the first calculation instantaneous frequency is given as 4e9 Hz *t</span>
+<span class="comment">%seconds</span>
+
+f1 = chirp_rate.*t;
+
+<span class="comment">%Second is given is doc</span>
+
+f2 = 1./(2*pi)*diff(phi)/(t(2)-t(1));
+
+figure;
+plot(t,f1,t(1:end-1), inst_freq2);
+xlabel(<span class="string">'Time (s)'</span>);
+ylabel(<span class="string">'Frequency (Hz)'</span>);
+title(<span class="string">'Comparison of Two Definitions of Instantaneous Frequency'</span>);
+legend(<span class="string">'f1'</span>, <span class="string">'f2'</span>);
+
+<span class="comment">%I would assume that f2 corresponds to the slope of the ridge of the</span>
+<span class="comment">%spectrogram because f2 looks more like the slope</span>
+<span class="comment">%of the ridge of the spectrogram</span>
+</pre><img vspace="5" hspace="5" src="main_02.png" alt=""> <h2 id="4">3.</h2><pre class="codeinput"><span class="keyword">if</span> html == true
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+figure;
+
+chirp_rate = 1e10;
+
+generated_chirp = chirp(t,0,1,chirp_rate);
+
+spectrogram(generated_chirp,triang(256),255,256, sampling_freq, <span class="string">'yaxis'</span>)
+
+title(<span class="string">'Discrete Time Linear FM Chirp Signal (Chirp Rate = 1e10)'</span>)
+
+<span class="comment">%increases slope by almost double when chirp rate changes to 1e11</span>
+</pre><img vspace="5" hspace="5" src="main_03.png" alt=""> <h2 id="5">4.</h2><pre class="codeinput"><span class="keyword">if</span> html == true
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+fs = 8e3;
+
+<span class="comment">%condition of overlap satisfied for triangular when R = M and L = M+1.</span>
+<span class="comment">%high frequency resolution = high model order M</span>
+
+load <span class="string">s1.mat</span>
+load <span class="string">s5.mat</span>
+
+<span class="comment">%soundsc(s1,fs)</span>
+<span class="comment">%soundsc(s5,fs)</span>
+
+<span class="comment">%narrowband</span>
+
+<span class="comment">%experimented to find the best values for overlap, window length, FFT</span>
+<span class="comment">%length</span>
+
+figure;
+
+spectrogram(s1, triang(600),599,600, fs, <span class="string">'yaxis'</span>)
+
+title (<span class="string">'narrowband s1'</span>)
+
+figure;
+
+spectrogram(s5, triang(1000),999,1000, fs, <span class="string">'yaxis'</span>)
+
+title (<span class="string">'narrowband s5'</span>)
+
+<span class="comment">%clear frequency resolution in both spectrograms at the case of losing</span>
+<span class="comment">%temporal resolution</span>
+</pre><img vspace="5" hspace="5" src="main_04.png" alt=""> <img vspace="5" hspace="5" src="main_05.png" alt=""> <h2 id="6">5.</h2><pre class="codeinput"><span class="keyword">if</span> html == true
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+<span class="comment">%wideband</span>
+
+<span class="comment">%experimented to find the best values for overlap, window length, FFT</span>
+<span class="comment">%length</span>
+
+figure;
+
+spectrogram(s1, triang(50),49,50, fs, <span class="string">'yaxis'</span>)
+
+title(<span class="string">'wideband s1'</span>)
+
+figure;
+
+spectrogram(s5, triang(10),9,10, fs, <span class="string">'yaxis'</span>)
+
+title(<span class="string">'wideband s5'</span>)
+
+<span class="comment">%clear temporal resolution in both spectrograms at the case of losing</span>
+<span class="comment">%frequency resolution</span>
+</pre><img vspace="5" hspace="5" src="main_06.png" alt=""> <img vspace="5" hspace="5" src="main_07.png" alt=""> <h2 id="7">6.</h2><pre class="codeinput"><span class="keyword">if</span> html == true
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+
+load <span class="string">vowels.mat</span>
+
+s = spectrogram(vowels,rectwin(256),128,1024, fs, <span class="string">'yaxis'</span>);
+
+<span class="comment">%in order to make columns 1024-pt</span>
+
+s = [s;flipud(s)];
+signal = reconstruct_signal(s);
+
+difference = ((signal - vowels(1:size(signal,1))).^2);
+
+figure;
+
+plot(difference)
+
+ylabel(<span class="string">'squared error'</span>)
+xlabel(<span class="string">'n'</span>)
+title(<span class="string">'(estimated signal - original signal)^2'</span>)
+</pre><img vspace="5" hspace="5" src="main_08.png" alt=""> <h2 id="8">7.</h2><pre class="codeinput"><span class="keyword">if</span> html == true
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+
+s = spectrogram(vowels,rectwin(256),128,1024, fs, <span class="string">'yaxis'</span>);
+
+<span class="comment">%throwing out every other sample</span>
+
+s = s(:,(1:2:end));
+
+<span class="comment">%in order to make columns 1024-pt</span>
+
+s = [s;flipud(s)];
+faster_signal = reconstruct_signal(s);
+
+subplot(2,1,1);
+plot(signal)
+xlabel(<span class="string">'n'</span>)
+title(<span class="string">'signal recovered from STFT'</span>)
+
+subplot(2,1,2);
+plot(faster_signal)
+xlabel(<span class="string">'n'</span>)
+title(<span class="string">'faster signal recovered modified STFT with every other slice'</span>)
+
+
+<span class="comment">%soundsc(vowels, fs)</span>
+audiowrite(<span class="string">'vowels.wav'</span>, vowels, fs)
+<span class="comment">%soundsc(signal,fs)</span>
+audiowrite(<span class="string">'vowels_estimate.wav'</span>, signal, fs)
+<span class="comment">%soundsc(faster_signal);</span>
+audiowrite(<span class="string">'vowels_estimate_faster.wav'</span>, faster_signal, fs)
+
+<span class="comment">%Same frequency retained but faster time-scale is indicated by</span>
+<span class="comment">%vowels_estimate_faster.wav which says the vowels faster.</span>
+</pre><pre class="codeoutput">Warning: Data clipped when writing file. 
+Warning: Data clipped when writing file. 
+Warning: Data clipped when writing file. 
+</pre><img vspace="5" hspace="5" src="main_09.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clc;
+close all;
+
+%Dan Brody
+%ECE-310 DSP
+%Professor Keene
+%Project 4 : Spectrogram Analysis and Applications
+
+%close all for html because issue with plots not being in the right section
+
+html = true;
+
+%% 1.
+
+if html == true
+    close all;
+end
+
+sampling_freq = 5e6;
+chirp_rate = 4e9;
+
+%chirp sampled at 5Mhz for 200e-6 s where instantaneous freq at t=0 is 0
+%and chirp rate is 4e9 where chirp rate is (f1-f0)/T
+%setting T = 1 f0 = 0, t1 = 1, and f1 = 4e9 
+
+
+t = 0:1/(5e6):200e-6;
+generated_chirp = chirp(t,0,1,4e9);
+
+spectrogram(generated_chirp,triang(256),255,256, sampling_freq,'yaxis')
+title('Discrete Time Linear FM Chirp Signal (Chirp Rate = 4e9)')
+
+
+
+%% 2.
+
+if html == true
+    close all;
+end
+
+
+
+
+phi = 2*pi*chirp_rate*t.^2;
+
+%as for the first calculation instantaneous frequency is given as 4e9 Hz *t
+%seconds
+
+f1 = chirp_rate.*t; 
+
+%Second is given is doc
+
+f2 = 1./(2*pi)*diff(phi)/(t(2)-t(1));
+
+figure;
+plot(t,f1,t(1:end-1), inst_freq2);
+xlabel('Time (s)');
+ylabel('Frequency (Hz)');
+title('Comparison of Two Definitions of Instantaneous Frequency');
+legend('f1', 'f2');
+
+%I would assume that f2 corresponds to the slope of the ridge of the
+%spectrogram because f2 looks more like the slope
+%of the ridge of the spectrogram
+
+%% 3.
+
+if html == true
+    close all;
+end
+
+figure;
+
+chirp_rate = 1e10;
+
+generated_chirp = chirp(t,0,1,chirp_rate);
+
+spectrogram(generated_chirp,triang(256),255,256, sampling_freq, 'yaxis')
+
+title('Discrete Time Linear FM Chirp Signal (Chirp Rate = 1e10)')
+
+%increases slope by almost double when chirp rate changes to 1e11
+%% 4.
+
+if html == true
+    close all;
+end
+
+fs = 8e3;
+
+%condition of overlap satisfied for triangular when R = M and L = M+1.
+%high frequency resolution = high model order M
+
+load s1.mat
+load s5.mat
+
+%soundsc(s1,fs)
+%soundsc(s5,fs)
+
+%narrowband
+
+%experimented to find the best values for overlap, window length, FFT
+%length
+
+figure;
+
+spectrogram(s1, triang(600),599,600, fs, 'yaxis')
+
+title ('narrowband s1')
+
+figure;
+
+spectrogram(s5, triang(1000),999,1000, fs, 'yaxis')
+
+title ('narrowband s5')
+
+%clear frequency resolution in both spectrograms at the case of losing
+%temporal resolution
+
+%% 5.
+
+if html == true
+    close all;
+end
+
+%wideband
+
+%experimented to find the best values for overlap, window length, FFT
+%length
+
+figure;
+
+spectrogram(s1, triang(50),49,50, fs, 'yaxis')
+
+title('wideband s1')
+
+figure;
+
+spectrogram(s5, triang(10),9,10, fs, 'yaxis')
+
+title('wideband s5')
+
+%clear temporal resolution in both spectrograms at the case of losing
+%frequency resolution
+
+%% 6.
+
+if html == true
+    close all;
+end
+
+
+load vowels.mat
+
+s = spectrogram(vowels,rectwin(256),128,1024, fs, 'yaxis');
+
+%in order to make columns 1024-pt
+
+s = [s;flipud(s)];
+signal = reconstruct_signal(s);
+
+difference = ((signal - vowels(1:size(signal,1))).^2);
+
+figure;
+
+plot(difference)
+
+ylabel('squared error')
+xlabel('n')
+title('(estimated signal - original signal)^2')
+
+
+%% 7. 
+
+if html == true
+    close all;
+end
+
+
+s = spectrogram(vowels,rectwin(256),128,1024, fs, 'yaxis');
+
+%throwing out every other sample
+
+s = s(:,(1:2:end));
+
+%in order to make columns 1024-pt
+
+s = [s;flipud(s)];
+faster_signal = reconstruct_signal(s);
+
+subplot(2,1,1);
+plot(signal)
+xlabel('n')
+title('signal recovered from STFT')
+
+subplot(2,1,2); 
+plot(faster_signal)
+xlabel('n')
+title('faster signal recovered modified STFT with every other slice')
+
+
+%soundsc(vowels, fs)
+audiowrite('vowels.wav', vowels, fs)
+%soundsc(signal,fs)
+audiowrite('vowels_estimate.wav', signal, fs)
+%soundsc(faster_signal);
+audiowrite('vowels_estimate_faster.wav', faster_signal, fs)
+
+%Same frequency retained but faster time-scale is indicated by
+%vowels_estimate_faster.wav which says the vowels faster.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
