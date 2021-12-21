@@ -1,0 +1,687 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>main</title><meta name="generator" content="MATLAB 9.10"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-12-20"><meta name="DC.source" content="main.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">(a)</a></li><li><a href="#3">Butterworth IIR</a></li><li><a href="#4">Chebyshev Type 1</a></li><li><a href="#5">Chebyshev Type 2</a></li><li><a href="#6">Elliptic</a></li><li><a href="#7">Parks-Mclellan</a></li><li><a href="#8">Kaiser</a></li><li><a href="#9">Table of Filter Orders and Filter Multiplications</a></li><li><a href="#10">Noisy vs. Filtered Sound</a></li><li><a href="#11">Functions</a></li></ul></div><pre class="codeinput">clc;
+close <span class="string">all</span>;
+clear <span class="string">variables</span>;
+
+<span class="comment">%Dan Brody</span>
+<span class="comment">%ECE 310- DSP</span>
+<span class="comment">%Professor Keene</span>
+<span class="comment">%11/2/2021</span>
+<span class="comment">%Project 3 : Filter Design</span>
+
+load <span class="string">projIB</span>
+
+<span class="comment">%issues with plots in wring sections so need a condition when publishing</span>
+
+html = true;
+</pre><h2 id="2">(a)</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+<span class="comment">% specifications</span>
+Gsb_max = -55;
+Gpb_max = 40;
+Gpb_min = 37;
+
+Rp = Gpb_max-Gpb_min; <span class="comment">% passband gain</span>
+Rs = Gpb_max-Gsb_max; <span class="comment">% stopband attenuation</span>
+
+
+Wp = 2500/(fs/2);
+Ws = 4000/(fs/2);
+
+filters = [<span class="string">"Butterworth"</span>, <span class="string">"Chebyshev Type 1"</span>, <span class="string">"Chebyshev Type 2"</span>, <span class="string">"Elliptic"</span>, <span class="string">"Parks-Mclellan"</span>, <span class="string">"Kaiser"</span>];
+
+<span class="comment">%initializing array where I will take filter orders for each respective</span>
+<span class="comment">%filter and put in table (Part (a))</span>
+
+filter_orders = zeros(1,size(filters,2));
+
+<span class="comment">%initializing array where I will take number of multiplications for each respective</span>
+<span class="comment">%filter and put in table (Part (b))</span>
+
+filter_multiplications = zeros(1,size(filters,2));
+</pre><h2 id="3">Butterworth IIR</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+
+<span class="comment">%finding order</span>
+
+[n_buttord,Wn_buttord] = buttord(Wp,Ws,Rp,Rs);
+[z_buttord,p_buttord,k_buttord] = butter(n_buttord, Wn_buttord);
+
+<span class="comment">%finding transfer function and sos</span>
+
+[b_buttord, a_buttord] = zp2tf(z_buttord,p_buttord,k_buttord);
+sos = zp2sos(z_buttord,p_buttord,k_buttord);
+
+<span class="comment">%populating filter order and multiplication array</span>
+
+filter_orders(1) = n_buttord;
+filter_multiplications(1) = length(a_buttord) + length(b_buttord);
+
+<span class="comment">%graphing (c) - (e)</span>
+
+graph_appropriate_graphs(dfilt.df1sos(sos), fs, noisy, <span class="string">"Butterworth"</span>, false);
+
+<span class="comment">%sound is clear but sound of a mic in the beginning</span>
+</pre><img vspace="5" hspace="5" src="main_01.png" alt=""> <img vspace="5" hspace="5" src="main_02.png" alt=""> <img vspace="5" hspace="5" src="main_03.png" alt=""> <h2 id="4">Chebyshev Type 1</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+<span class="comment">%finding order</span>
+
+[n_chebyshev_1,Wp_chebyshev_1] = cheb1ord(Wp,Ws,Rp,Rs);
+[z_chebyshev_1,p_chebyshev_1, k_chebyshev_1] = cheby1(n_chebyshev_1, Rp, Wp_chebyshev_1);
+
+<span class="comment">%finding transfer function and sos</span>
+
+[b_chebyshev_1,a_chebyshev_1] = zp2tf(z_chebyshev_1,p_chebyshev_1,k_chebyshev_1);
+sos = zp2sos(z_chebyshev_1,p_chebyshev_1,k_chebyshev_1);
+
+<span class="comment">%populating filter order and multiplication array</span>
+
+filter_orders(2) = n_buttord;
+filter_multiplications(2) = length(a_chebyshev_1) + length(b_chebyshev_1);
+
+<span class="comment">%graphing (c) - (e)</span>
+
+graph_appropriate_graphs(dfilt.df1sos(sos), fs, noisy, <span class="string">"Chebyshev Type 1"</span>, false);
+
+<span class="comment">%sound is clear but sound of a mic in the beginning</span>
+</pre><img vspace="5" hspace="5" src="main_04.png" alt=""> <img vspace="5" hspace="5" src="main_05.png" alt=""> <img vspace="5" hspace="5" src="main_06.png" alt=""> <h2 id="5">Chebyshev Type 2</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+<span class="comment">%finding order</span>
+
+[n_chebyshev_2,Ws_chebyshev_2] = cheb2ord(Wp,Ws,Rp,Rs);
+[z_chebyshev_2,p_chebyshev_2, k_chebyshev_2] = cheby2(n_chebyshev_2, Rs, Ws_chebyshev_2);
+
+<span class="comment">%finding transfer function and sos</span>
+
+[b_chebyshev_2,a_chebyshev_2] = zp2tf(z_chebyshev_2,p_chebyshev_2,k_chebyshev_2);
+sos = zp2sos(z_chebyshev_2,p_chebyshev_2,k_chebyshev_2);
+
+<span class="comment">%populating filter order and multiplication array</span>
+
+filter_orders(3) = n_chebyshev_2;
+filter_multiplications(3) = length(a_chebyshev_2) + length(b_chebyshev_2);
+
+<span class="comment">%graphing (c) - (e)</span>
+
+graph_appropriate_graphs(dfilt.df1sos(sos), fs, noisy, <span class="string">"Chebyshev Type 2"</span>, false);
+
+<span class="comment">%sound in the beginning like a mic but other than that sound is clear</span>
+</pre><img vspace="5" hspace="5" src="main_07.png" alt=""> <img vspace="5" hspace="5" src="main_08.png" alt=""> <img vspace="5" hspace="5" src="main_09.png" alt=""> <h2 id="6">Elliptic</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+<span class="comment">%finding order</span>
+
+[n_elliptic,Wp_elliptic] = ellipord(Wp,Ws,Rp,Rs);
+[z_elliptic,p_elliptic,k_elliptic] = ellip(n_elliptic,Rp,Rs,Wp_elliptic);
+
+<span class="comment">%finding transfer function and sos</span>
+
+[b_elliptic,a_elliptic] = zp2tf(z_elliptic,p_elliptic,k_elliptic);
+sos = zp2sos(z_elliptic,p_elliptic,k_elliptic);
+
+<span class="comment">%populating filter order and multiplication array</span>
+
+filter_orders(4) = n_elliptic;
+filter_multiplications(4) = length(a_elliptic) + length(b_elliptic);
+
+<span class="comment">%graphing (c) - (e)</span>
+
+graph_appropriate_graphs(dfilt.df1sos(sos), fs, noisy, <span class="string">"Elliptic"</span>, false);
+
+<span class="comment">%sound is clear and less noise than other signals</span>
+</pre><img vspace="5" hspace="5" src="main_10.png" alt=""> <img vspace="5" hspace="5" src="main_11.png" alt=""> <img vspace="5" hspace="5" src="main_12.png" alt=""> <h2 id="7">Parks-Mclellan</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+ParksMcClellan = designfilt(<span class="string">'lowpassfir'</span>,<span class="string">'PassbandFrequency'</span>,2500,<span class="string">'StopbandFrequency'</span>,4000,<span class="string">'PassbandRipple'</span>,Rp,<span class="string">'StopbandAttenuation'</span>,Rs,<span class="string">'SampleRate'</span>,fs,<span class="string">'DesignMethod'</span>,<span class="string">'equiripple'</span>);
+[filter_order, multiplications] = compute_order_mult(ParksMcClellan);
+
+<span class="comment">%populating filter order and multiplication array</span>
+
+filter_orders(5)= filter_order;
+filter_multiplications(5) = multiplications;
+
+<span class="comment">%graphing (c) - (e)</span>
+
+graph_appropriate_graphs(ParksMcClellan , fs, noisy, <span class="string">"Parks-Mclellan"</span>, false);
+
+<span class="comment">%clear but there is some noise in the beginning like a mic</span>
+</pre><img vspace="5" hspace="5" src="main_13.png" alt=""> <img vspace="5" hspace="5" src="main_14.png" alt=""> <img vspace="5" hspace="5" src="main_15.png" alt=""> <h2 id="8">Kaiser</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+Kaiser = designfilt(<span class="string">'lowpassfir'</span>,<span class="string">'PassbandFrequency'</span>,2500,<span class="string">'StopbandFrequency'</span>,4000,<span class="string">'PassbandRipple'</span>,Rp,<span class="string">'StopbandAttenuation'</span>,Rs,<span class="string">'SampleRate'</span>,fs,<span class="string">'DesignMethod'</span>,<span class="string">'kaiserwin'</span>);
+[filter_order, multiplications] = compute_order_mult(Kaiser);
+
+<span class="comment">%populating filter order and multiplication array</span>
+
+filter_orders(6)= filter_order;
+filter_multiplications(6) = multiplications;
+
+<span class="comment">%graphing (c) - (e)</span>
+
+graph_appropriate_graphs(Kaiser, fs, noisy, <span class="string">"Kaiser"</span>, false);
+
+<span class="comment">%sound is clear</span>
+</pre><img vspace="5" hspace="5" src="main_16.png" alt=""> <img vspace="5" hspace="5" src="main_17.png" alt=""> <img vspace="5" hspace="5" src="main_18.png" alt=""> <h2 id="9">Table of Filter Orders and Filter Multiplications</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+T = table(filters.', filter_orders.');
+T.Properties.VariableNames = {<span class="string">'Filter'</span>,<span class="string">'Filter Order'</span>};
+T
+
+T2 = table(filters.', filter_multiplications.');
+T2.Properties.VariableNames = {<span class="string">'Filter'</span>,<span class="string">'Filter Multiplications'</span>};
+T2
+</pre><pre class="codeoutput">
+T =
+
+  6&times;2 table
+
+          Filter          Filter Order
+    __________________    ____________
+
+    "Butterworth"              23     
+    "Chebyshev Type 1"         23     
+    "Chebyshev Type 2"         11     
+    "Elliptic"                  8     
+    "Parks-Mclellan"           80     
+    "Kaiser"                  187     
+
+
+T2 =
+
+  6&times;2 table
+
+          Filter          Filter Multiplications
+    __________________    ______________________
+
+    "Butterworth"                   48          
+    "Chebyshev Type 1"              24          
+    "Chebyshev Type 2"              24          
+    "Elliptic"                      18          
+    "Parks-Mclellan"                82          
+    "Kaiser"                       189          
+
+</pre><h2 id="10">Noisy vs. Filtered Sound</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+soundsc(noisy, fs)
+audiowrite(<span class="string">'noisy.wav'</span>, noisy, fs);
+
+<span class="comment">%The noisy sound is very high-pitched and sounds almost like hissing</span>
+<span class="comment">%whereas filtering the signal much of the high frequencies were filtered</span>
+<span class="comment">%out (i.e. since we are using lowpass filters). The filtered sound said</span>
+<span class="comment">%"That noise problem becomes more annoying each day". A few filters</span>
+<span class="comment">%performed better than others for this audio. Particularly both the kaiser and</span>
+<span class="comment">%elliptic filter did particularly well whereas more noise was heard in other</span>
+<span class="comment">%filters.</span>
+</pre><h2 id="11">Functions</h2><pre class="codeinput"><span class="keyword">function</span> [filter_order, multiplications] = compute_order_mult(filter_input)
+<span class="comment">    %{
+</span><span class="comment">    computing filter order and multiplications using a designfilt object
+</span><span class="comment">%}
+</span>
+    <span class="comment">%compute filter order</span>
+
+    filter_order = filtord(filter_input);
+
+    <span class="comment">% compute filter multiplications</span>
+
+    [b,a] = tf(filter_input);
+    multiplications = length(b) + length(a);
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> graph_appropriate_graphs(filter_input, fs, noisy, filter_name, play_sound)
+<span class="comment">    %{
+</span><span class="comment">        graphing (c) - (e) for filter_name where filter_input is some
+</span><span class="comment">        filter object, fs is the sampling frequency, noisy is the noisy
+</span><span class="comment">        signal, and play_sound is a boolean that allows the user to
+</span><span class="comment">        specify whether or not to play the filtered sound.
+</span><span class="comment">%}
+</span>    [h,w] = freqz(filter_input, fs);
+    mag_db = 20*log10(abs(h));
+
+    <span class="comment">%plotting magnitude response as in (c)</span>
+
+    figure;
+    subplot(3,1,1);
+    plot(w, mag_db);
+    title (filter_name + <span class="string">' Filter Magnitude Response'</span>);
+    xlabel(<span class="string">'Radian Frequency (w)'</span>);
+    ylabel(<span class="string">'Magnitude(dB)'</span>);
+
+    <span class="comment">%plotting magnitude response w/ passband ripple detail as in (c)</span>
+
+    subplot(3,1,2);
+    plot(w,abs(h));
+    xlim([0.3, 0.5]);
+    title (filter_name + <span class="string">' Filter Passband Ripple Detail'</span>);
+    xlabel(<span class="string">'Rdaian Frequency (w)'</span>);
+    ylabel(<span class="string">'Magnitude (Linear Scale)'</span>);
+
+    <span class="comment">%plotting group delay as in (c)</span>
+
+    subplot(3,1,3);
+    [gd,w] = grpdelay(filter_input, fs);
+    plot(w,gd);
+    title (filter_name + <span class="string">' Filter Group Delay'</span>);
+    xlabel (<span class="string">'Radian Frequency (w)'</span>);
+    ylabel (<span class="string">'Group Delay'</span>);
+
+    <span class="comment">%plotting pole-zero diagram as in (d)</span>
+
+    figure;
+    [z, p, k] = zplane(filter_input);
+    zplane(z,p);
+    title(filter_name + <span class="string">' Filter Pole-Zero Plot'</span>);
+
+    <span class="comment">%plotting impulse response as in (e)</span>
+
+    figure;
+    [impResp,t] = impz(filter_input, 100);
+    stem(t,impResp);
+    title(filter_name + <span class="string">' Filter Impulse Response'</span>);
+    xlabel(<span class="string">'Samples'</span>);
+    ylabel(<span class="string">'Magnitude'</span>);
+
+    filtered = filter(filter_input, noisy);
+    <span class="keyword">if</span> play_sound
+        soundsc(filtered, fs)
+    <span class="keyword">end</span>
+    audiowrite(filter_name+<span class="string">'.wav'</span>, filtered, fs);
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clc;
+close all;
+clear variables;
+
+%Dan Brody
+%ECE 310- DSP
+%Professor Keene
+%11/2/2021
+%Project 3 : Filter Design
+
+load projIB
+
+%issues with plots in wring sections so need a condition when publishing
+
+html = true;
+
+
+%% (a)
+
+if(html == true)
+    close all;
+end
+
+% specifications
+Gsb_max = -55; 
+Gpb_max = 40;
+Gpb_min = 37;
+
+Rp = Gpb_max-Gpb_min; % passband gain
+Rs = Gpb_max-Gsb_max; % stopband attenuation
+
+
+Wp = 2500/(fs/2); 
+Ws = 4000/(fs/2);
+
+filters = ["Butterworth", "Chebyshev Type 1", "Chebyshev Type 2", "Elliptic", "Parks-Mclellan", "Kaiser"];
+
+%initializing array where I will take filter orders for each respective
+%filter and put in table (Part (a))
+
+filter_orders = zeros(1,size(filters,2));
+
+%initializing array where I will take number of multiplications for each respective
+%filter and put in table (Part (b))
+
+filter_multiplications = zeros(1,size(filters,2));
+
+
+%% Butterworth IIR
+
+if(html == true)
+    close all;
+end
+
+
+%finding order
+
+[n_buttord,Wn_buttord] = buttord(Wp,Ws,Rp,Rs);
+[z_buttord,p_buttord,k_buttord] = butter(n_buttord, Wn_buttord);
+
+%finding transfer function and sos
+
+[b_buttord, a_buttord] = zp2tf(z_buttord,p_buttord,k_buttord);
+sos = zp2sos(z_buttord,p_buttord,k_buttord);
+
+%populating filter order and multiplication array
+
+filter_orders(1) = n_buttord;
+filter_multiplications(1) = length(a_buttord) + length(b_buttord);
+
+%graphing (c) - (e)
+
+graph_appropriate_graphs(dfilt.df1sos(sos), fs, noisy, "Butterworth", false);
+
+%sound is clear but sound of a mic in the beginning
+
+
+%% Chebyshev Type 1
+
+if(html == true)
+    close all;
+end
+
+%finding order
+
+[n_chebyshev_1,Wp_chebyshev_1] = cheb1ord(Wp,Ws,Rp,Rs);
+[z_chebyshev_1,p_chebyshev_1, k_chebyshev_1] = cheby1(n_chebyshev_1, Rp, Wp_chebyshev_1);
+
+%finding transfer function and sos
+
+[b_chebyshev_1,a_chebyshev_1] = zp2tf(z_chebyshev_1,p_chebyshev_1,k_chebyshev_1);
+sos = zp2sos(z_chebyshev_1,p_chebyshev_1,k_chebyshev_1);
+
+%populating filter order and multiplication array
+
+filter_orders(2) = n_buttord;
+filter_multiplications(2) = length(a_chebyshev_1) + length(b_chebyshev_1);
+
+%graphing (c) - (e)
+
+graph_appropriate_graphs(dfilt.df1sos(sos), fs, noisy, "Chebyshev Type 1", false);
+
+%sound is clear but sound of a mic in the beginning
+
+%% Chebyshev Type 2
+
+if(html == true)
+    close all;
+end
+
+%finding order
+
+[n_chebyshev_2,Ws_chebyshev_2] = cheb2ord(Wp,Ws,Rp,Rs);
+[z_chebyshev_2,p_chebyshev_2, k_chebyshev_2] = cheby2(n_chebyshev_2, Rs, Ws_chebyshev_2);
+
+%finding transfer function and sos
+
+[b_chebyshev_2,a_chebyshev_2] = zp2tf(z_chebyshev_2,p_chebyshev_2,k_chebyshev_2);
+sos = zp2sos(z_chebyshev_2,p_chebyshev_2,k_chebyshev_2);
+
+%populating filter order and multiplication array
+
+filter_orders(3) = n_chebyshev_2;
+filter_multiplications(3) = length(a_chebyshev_2) + length(b_chebyshev_2);
+
+%graphing (c) - (e)
+
+graph_appropriate_graphs(dfilt.df1sos(sos), fs, noisy, "Chebyshev Type 2", false);
+
+%sound in the beginning like a mic but other than that sound is clear
+
+%% Elliptic
+
+if(html == true)
+    close all;
+end
+
+%finding order
+
+[n_elliptic,Wp_elliptic] = ellipord(Wp,Ws,Rp,Rs);
+[z_elliptic,p_elliptic,k_elliptic] = ellip(n_elliptic,Rp,Rs,Wp_elliptic); 
+
+%finding transfer function and sos
+
+[b_elliptic,a_elliptic] = zp2tf(z_elliptic,p_elliptic,k_elliptic);
+sos = zp2sos(z_elliptic,p_elliptic,k_elliptic);
+
+%populating filter order and multiplication array
+
+filter_orders(4) = n_elliptic;
+filter_multiplications(4) = length(a_elliptic) + length(b_elliptic);
+
+%graphing (c) - (e)
+
+graph_appropriate_graphs(dfilt.df1sos(sos), fs, noisy, "Elliptic", false);
+
+%sound is clear and less noise than other signals
+
+
+%% Parks-Mclellan
+
+if(html == true)
+    close all;
+end
+
+ParksMcClellan = designfilt('lowpassfir','PassbandFrequency',2500,'StopbandFrequency',4000,'PassbandRipple',Rp,'StopbandAttenuation',Rs,'SampleRate',fs,'DesignMethod','equiripple');        
+[filter_order, multiplications] = compute_order_mult(ParksMcClellan);
+
+%populating filter order and multiplication array
+
+filter_orders(5)= filter_order;
+filter_multiplications(5) = multiplications;
+
+%graphing (c) - (e)
+
+graph_appropriate_graphs(ParksMcClellan , fs, noisy, "Parks-Mclellan", false);
+
+%clear but there is some noise in the beginning like a mic
+
+%% Kaiser
+
+if(html == true)
+    close all;
+end
+
+Kaiser = designfilt('lowpassfir','PassbandFrequency',2500,'StopbandFrequency',4000,'PassbandRipple',Rp,'StopbandAttenuation',Rs,'SampleRate',fs,'DesignMethod','kaiserwin');
+[filter_order, multiplications] = compute_order_mult(Kaiser);
+
+%populating filter order and multiplication array
+
+filter_orders(6)= filter_order;
+filter_multiplications(6) = multiplications;
+
+%graphing (c) - (e)
+
+graph_appropriate_graphs(Kaiser, fs, noisy, "Kaiser", false);
+
+%sound is clear
+
+%% Table of Filter Orders and Filter Multiplications
+
+if(html == true)
+    close all;
+end
+
+T = table(filters.', filter_orders.');
+T.Properties.VariableNames = {'Filter','Filter Order'};
+T
+
+T2 = table(filters.', filter_multiplications.');
+T2.Properties.VariableNames = {'Filter','Filter Multiplications'};
+T2
+
+%% Noisy vs. Filtered Sound
+
+if(html == true)
+    close all;
+end
+
+soundsc(noisy, fs)
+audiowrite('noisy.wav', noisy, fs);
+
+%The noisy sound is very high-pitched and sounds almost like hissing
+%whereas filtering the signal much of the high frequencies were filtered
+%out (i.e. since we are using lowpass filters). The filtered sound said
+%"That noise problem becomes more annoying each day". A few filters
+%performed better than others for this audio. Particularly both the kaiser and
+%elliptic filter did particularly well whereas more noise was heard in other
+%filters.
+
+%% Functions
+
+
+function [filter_order, multiplications] = compute_order_mult(filter_input)
+    %{
+    computing filter order and multiplications using a designfilt object 
+%}
+    
+    %compute filter order
+    
+    filter_order = filtord(filter_input);
+    
+    % compute filter multiplications
+    
+    [b,a] = tf(filter_input);
+    multiplications = length(b) + length(a);
+end
+
+function graph_appropriate_graphs(filter_input, fs, noisy, filter_name, play_sound)
+    %{
+        graphing (c) - (e) for filter_name where filter_input is some
+        filter object, fs is the sampling frequency, noisy is the noisy
+        signal, and play_sound is a boolean that allows the user to
+        specify whether or not to play the filtered sound.
+%}
+    [h,w] = freqz(filter_input, fs);
+    mag_db = 20*log10(abs(h));
+    
+    %plotting magnitude response as in (c)
+    
+    figure;
+    subplot(3,1,1);
+    plot(w, mag_db);
+    title (filter_name + ' Filter Magnitude Response');
+    xlabel('Radian Frequency (w)');
+    ylabel('Magnitude(dB)');
+    
+    %plotting magnitude response w/ passband ripple detail as in (c)
+    
+    subplot(3,1,2);
+    plot(w,abs(h));
+    xlim([0.3, 0.5]);
+    title (filter_name + ' Filter Passband Ripple Detail');
+    xlabel('Rdaian Frequency (w)');  
+    ylabel('Magnitude (Linear Scale)');
+    
+    %plotting group delay as in (c)
+    
+    subplot(3,1,3);
+    [gd,w] = grpdelay(filter_input, fs);
+    plot(w,gd);
+    title (filter_name + ' Filter Group Delay');
+    xlabel ('Radian Frequency (w)');
+    ylabel ('Group Delay');
+    
+    %plotting pole-zero diagram as in (d)
+    
+    figure;
+    [z, p, k] = zplane(filter_input); 
+    zplane(z,p);
+    title(filter_name + ' Filter Pole-Zero Plot');
+    
+    %plotting impulse response as in (e)
+    
+    figure;
+    [impResp,t] = impz(filter_input, 100); 
+    stem(t,impResp);
+    title(filter_name + ' Filter Impulse Response');
+    xlabel('Samples');
+    ylabel('Magnitude');
+    
+    filtered = filter(filter_input, noisy);
+    if play_sound
+        soundsc(filtered, fs)
+    end
+    audiowrite(filter_name+'.wav', filtered, fs);
+end
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
