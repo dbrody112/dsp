@@ -1,0 +1,743 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>main</title><meta name="generator" content="MATLAB 9.10"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-12-20"><meta name="DC.source" content="main.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Heading</a></li><li><a href="#2">Preliminary Plotting</a></li><li><a href="#3">A. Autocorrelation and MATLAB</a></li><li><a href="#4">A.1</a></li><li><a href="#5">A.2</a></li><li><a href="#6">(a)</a></li><li><a href="#7">(b)</a></li><li><a href="#8">(c)</a></li><li><a href="#9">A.3</a></li><li><a href="#10">(a)</a></li><li><a href="#11">(b)</a></li><li><a href="#12">(c)</a></li><li><a href="#13">B.1</a></li><li><a href="#14">B.2</a></li><li><a href="#15">B.3</a></li><li><a href="#16">B.4</a></li><li><a href="#17">B.5</a></li><li><a href="#18">(a)</a></li><li><a href="#19">(b)</a></li><li><a href="#20">(c)</a></li><li><a href="#21">Comments</a></li><li><a href="#22">Functions</a></li></ul></div><h2 id="1">Heading</h2><pre class="codeinput"><span class="comment">%Dan Brody</span>
+<span class="comment">%ECE-310-Digital Signal Processing</span>
+<span class="comment">%Professor Keene</span>
+<span class="comment">%12/15/2021</span>
+<span class="comment">%Project 5</span>
+
+<span class="comment">%*close all is used between sections because there were some errors in</span>
+<span class="comment">%plots leaking into different sections. set html = false if running code.</span>
+
+html = true;
+
+clc;
+close <span class="string">all</span>;
+
+load <span class="string">pj2data.mat</span>
+</pre><h2 id="2">Preliminary Plotting</h2><pre class="codeinput"><span class="comment">%plotting y and Hejw2</span>
+
+Q = 32;
+
+figure;
+
+plot(1:512, y)
+title(<span class="string">'y[n]'</span>)
+xlabel(<span class="string">'n'</span>)
+
+figure;
+
+plot(1:512, Hejw2)
+title(<span class="string">'|H(e^{jw})|^2'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+xlabel(<span class="string">'k'</span>)
+</pre><img vspace="5" hspace="5" src="main_01.png" alt=""> <img vspace="5" hspace="5" src="main_02.png" alt=""> <h2 id="3">A. Autocorrelation and MATLAB</h2><h2 id="4">A.1</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+figure;
+
+y1_n = y(1:Q);
+
+
+plot(xcorr(y1_n, y1_n,<span class="string">'biased'</span>))
+title(<span class="string">'autocorr'</span>)
+
+y1_negative_n = fliplr(y1_n);
+
+
+figure;
+plot(conv(y1_negative_n, y1_n))
+title(<span class="string">'alternative autocorr'</span>)
+
+<span class="comment">%both autocorrs the same</span>
+
+
+<span class="comment">%before talking about what xcorr would calculate let us talk about</span>
+<span class="comment">%biased vs. unbiased estimators. As opposed to biased estimators the</span>
+<span class="comment">%expected value of the unbiased estimator of the estimated parameter is</span>
+<span class="comment">%the parameter. The biased estimator of autocorrelation (xcorr)</span>
+<span class="comment">%is (1/Q) * c_vv [m] where cvv[m] corresponding to the aperiodic correlation of</span>
+<span class="comment">%a rectangularly windowed segment of x[n] of length Q.</span>
+<span class="comment">%In tandem, however, the unbiased estimator is 1/(Q-|m|) * c_vv [m]</span>
+<span class="comment">%so this is the equation that will be calculated when we</span>
+<span class="comment">%replace &#8216;biased&#8217; with &#8216;unbiased&#8217;.</span>
+</pre><img vspace="5" hspace="5" src="main_03.png" alt=""> <img vspace="5" hspace="5" src="main_04.png" alt=""> <h2 id="5">A.2</h2><h2 id="6">(a)</h2><pre class="codeinput"><span class="comment">%The fourier transform of the autocorrelation function is the PSD (Power</span>
+<span class="comment">%Spectral Density) thus the output of the fourier transform must be positive and real.</span>
+</pre><h2 id="7">(b)</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+figure;
+
+<span class="comment">%Following A.1 c_y1y1[m] = Q * xcorr(y1, y1, 'biased')</span>
+
+cy1_y1 = xcorr(y1_n,y1_n,<span class="string">'biased'</span>);
+y_ = fft(cy1_y1,64);
+mag = abs(y_);
+phse = unwrap(angle(y_));
+
+<span class="comment">%plotting magnitude of c_y1y1[m]</span>
+
+
+stem(1:64,mag)
+title(<span class="string">'magnitude of 64-point DFT'</span>)
+xlabel(<span class="string">'k'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+
+figure;
+
+<span class="comment">%plotting phase of c_y1y1[m]</span>
+
+figure;
+stem(1:64, phse)
+title(<span class="string">'phase of 64-point dft'</span>)
+xlabel(<span class="string">'k'</span>)
+ylabel(<span class="string">'phase'</span>)
+
+<span class="comment">%the relationship between c_y1y1[m] and the deterministic autocorrelation is a</span>
+<span class="comment">%that they are the same or similar (i.e. deterministic autocorrelation = xcorr(y1,y1,'biased')).</span>
+
+deterministic_autocorr = zeros(1, 32);
+<span class="keyword">for</span> i = 1:32
+    deterministic_autocorr(1, i) = 1/32 * sum(y1_n(i:32).*y1_n(1:32-i+1));
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="main_05.png" alt=""> <img vspace="5" hspace="5" src="main_06.png" alt=""> <img vspace="5" hspace="5" src="main_07.png" alt=""> <h2 id="8">(c)</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+deterministic_autocorr_1 =  cy1_y1;
+deterministic_autocorr_2 =  deterministic_autocorr;
+
+
+<span class="comment">%verifying signal is correct by plotting both signal's phase and magnitude</span>
+<span class="comment">%response against each other.</span>
+
+y1 = fft(deterministic_autocorr_1,64);
+mag1 = abs(y1);
+phse1 = (angle(y1));
+
+y2 = fft(deterministic_autocorr_2,64);
+mag2 = abs(y2);
+phse2 = (angle(y2));
+
+<span class="comment">%magnitude response subplot</span>
+
+subplot(2,1,1);
+stem(1:64,mag1)
+title(<span class="string">'magnitude of 64-point DFT for Deterministic Autocorr from c_{y1y1}[m]'</span>)
+xlabel(<span class="string">'k'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+
+
+subplot(2,1,2);
+stem(1:64,mag2)
+title(<span class="string">'magnitude of 64-point DFT for Deterministic Autocorr'</span>)
+xlabel(<span class="string">'k'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+</pre><img vspace="5" hspace="5" src="main_08.png" alt=""> <h2 id="9">A.3</h2><h2 id="10">(a)</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+figure;
+
+stem(1:64,mag2)
+title(<span class="string">'magnitude of 64-point DFT for Deterministic Autocorr'</span>)
+xlabel(<span class="string">'k'</span>)
+ylabel(<span class="string">'magnitude'</span>)
+</pre><img vspace="5" hspace="5" src="main_09.png" alt=""> <h2 id="11">(b)</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+y1_n_fft = fft(y1_n,64);
+disp(size(y1_n_fft))
+mag_squared_32 = abs(y1_n_fft).^2;
+figure;
+stem(1:64,mag_squared_32)
+title(<span class="string">'magnitude squared of 64-point DFT for y1[n]'</span>)
+xlabel(<span class="string">'k'</span>)
+ylabel(<span class="string">'magnitude^2'</span>)
+</pre><pre class="codeoutput">     1    64
+
+</pre><img vspace="5" hspace="5" src="main_10.png" alt=""> <h2 id="12">(c)</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+y_n_fft = fft(y (1:64), 64);
+
+mag_squared_64 = abs(y_n_fft).^2;
+figure;
+stem(1:64,mag_squared_64)
+title(<span class="string">'magnitude squared of 64-point DFT for y[n]'</span>)
+xlabel(<span class="string">'k'</span>)
+ylabel(<span class="string">'magnitude^2'</span>)
+
+<span class="comment">% relationship between (a) and (b) is a factor of 1/Q where Q here is 64.</span>
+<span class="comment">% (i.e.) the graph of (a) = 1/Q * graph in (b) theoretically.</span>
+<span class="comment">%Relationship between (b) and (c) is that (b) is the FFT of y2[n] windowed</span>
+<span class="comment">%where y2[n] is the first 64 samples of y.</span>
+
+freqresp = downsample(Hejw2,8);
+</pre><img vspace="5" hspace="5" src="main_11.png" alt=""> <h2 id="13">B.1</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+err = plot_against_ideal(freqresp,mag2,<span class="string">"Ideal PDS vs. Estimate Using DFT of \phi_{y1y1}"</span>);
+</pre><img vspace="5" hspace="5" src="main_12.png" alt=""> <h2 id="14">B.2</h2><pre class="codeinput">Q = 1024;
+
+<span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+<span class="comment">%using idea demonstrated in A.3 in defining a periodogram</span>
+
+fft_deterministic_autocorr_all = fft(y,1024);
+y_k_squared = abs(fft_deterministic_autocorr_all).^2;
+autocorr_estimate = (1/Q)*y_k_squared;
+
+err_trunc = plot_against_ideal(freqresp, downsample(autocorr_estimate,16), <span class="string">"Ideal PDS vs. Estimate Using DFT of \phi_{yy} w/ Downsampling to 64"</span>);
+</pre><img vspace="5" hspace="5" src="main_13.png" alt=""> <h2 id="15">B.3</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+periodogram = periodogram_averaging(y, 64);
+
+averaging_err = plot_against_ideal(freqresp, periodogram, <span class="string">"Ideal PDS vs. Periodogram Averaging Estimate"</span>);
+
+<span class="comment">%There is a notable difference between B.1 and B.2. from B.3. The error for</span>
+<span class="comment">%B.1. and B.2. are 5.97 and 5.92 respectively whereas the error for B.3</span>
+<span class="comment">%is 3.1403. In addition, in looking between figures we can see that periodogram</span>
+<span class="comment">%averaging results in a smoother signal</span>
+</pre><img vspace="5" hspace="5" src="main_14.png" alt=""> <h2 id="16">B.4</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+autocorr_estimate = xcorr(y,y,<span class="string">'biased'</span>);
+centered_31 = autocorr_estimate((512-15):(512+15));
+padded_seq = cat(2,centered_31, zeros(1, 64-31));
+fft_padded_seq = abs(fft(padded_seq, 64));
+
+indirect_blackman_tukey_err = plot_against_ideal(freqresp, fft_padded_seq, <span class="string">"Ideal PDS vs. Indirect Blackman-Tukey Estimate"</span>);
+</pre><img vspace="5" hspace="5" src="main_15.png" alt=""> <h2 id="17">B.5</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+disp(<span class="string">"Table of Errors for Different Estimators of PDS"</span>)
+
+Errors = [err;err_trunc; averaging_err; indirect_blackman_tukey_err];
+Estimators = [ <span class="string">"Estimate Using DFT of \phi_{y1y1}"</span> ; <span class="string">"Estimate Using DFT of \phi_{yy} w/ Truncation at 64"</span> ; <span class="string">"Periodogram Averaging Estimate"</span> ; <span class="string">"Blackman-Tukey Estimate"</span>];
+table(Estimators, Errors)
+</pre><pre class="codeoutput">Table of Errors for Different Estimators of PDS
+
+ans =
+
+  4&times;2 table
+
+                         Estimators                          Errors
+    _____________________________________________________    ______
+
+    "Estimate Using DFT of \phi_{y1y1}"                      5.9728
+    "Estimate Using DFT of \phi_{yy} w/ Truncation at 64"    5.9197
+    "Periodogram Averaging Estimate"                         3.1403
+    "Blackman-Tukey Estimate"                                1.1467
+
+</pre><h2 id="18">(a)</h2><pre class="codeinput"><span class="comment">%Indirect Blackman-Tukey estimate performed the best</span>
+</pre><h2 id="19">(b)</h2><pre class="codeinput"><span class="comment">%Rather than averaging several waveforms the indirect Blackman-Tukey method is taking the autocorrelation</span>
+<span class="comment">%estimate as the first calculation and applying a window before taking the DFT</span>
+<span class="comment">%which makes the wave smoothed without averaging. The effect is we are convolving</span>
+<span class="comment">%the periodogram with the fourier transform of the autocorrelation window</span>
+<span class="comment">%thus smoothing the rapid fluctuations of the periodogram spectrum</span>
+<span class="comment">%estimate. Another part as to why the Indirect Blackman-Tukey method is</span>
+<span class="comment">%doing so well is because 0&lt;=|m|&lt;=15</span>
+<span class="comment">%approaches Q = 31 and as |m| approaches Q, fewer and</span>
+<span class="comment">%fewer samples of x[n] are involved in the computation of the autocorrelation estimate;</span>
+<span class="comment">%With less samples the variance of the autocorrelation estimate should</span>
+<span class="comment">%decrease . Refer to eq. 10.98(b) in the textbook for a mathematical</span>
+<span class="comment">%interpretation.</span>
+
+<span class="comment">%&lt;information can be found on pages 850 - 851 of textbook&gt;</span>
+</pre><h2 id="20">(c)</h2><pre class="codeinput"><span class="keyword">if</span>(html == true)
+    close <span class="string">all</span>;
+<span class="keyword">end</span>
+
+figure;
+
+triangular_windowed_centered_31 = (triang(31).').*centered_31;
+padded_seq = cat(2,triangular_windowed_centered_31, zeros(1, 64-31));
+fft_padded_seq = abs(fft(padded_seq,64));
+
+blackman_tukey_traingular_err = plot_against_ideal(freqresp, fft_padded_seq, <span class="string">"Ideal PDS vs. Indirect Blackman-Tukey Estimate (Triangular)"</span>);
+disp(<span class="string">"Indirect Blackman-Tukey Error w/ Triangular Window : "</span> + num2str(blackman_tukey_traingular_err))
+</pre><pre class="codeoutput">Indirect Blackman-Tukey Error w/ Triangular Window : 0.27002
+</pre><img vspace="5" hspace="5" src="main_16.png" alt=""> <img vspace="5" hspace="5" src="main_17.png" alt=""> <h2 id="21">Comments</h2><pre class="codeinput"><span class="comment">%The calculation is likely different due to the specifications for each</span>
+<span class="comment">%respective window. For example the rectangular window has an approximate width of main</span>
+<span class="comment">%lobe of 4pi/(M+1) whereas the triangular/bartlett approximate width of</span>
+<span class="comment">%main lobe is 8pi/M, indicating that the bartlett window should have more</span>
+<span class="comment">%width in the mainlobe. This can easily be shown if we compare the figure</span>
+<span class="comment">%above and the figure calculated in B.5.</span>
+</pre><h2 id="22">Functions</h2><pre class="codeinput"><span class="keyword">function</span> periodogram = periodogram_averaging(signal, N)
+<span class="comment">%{
+</span><span class="comment">    Averages N-point periodograms over the signal where # of observed values is
+</span><span class="comment">    N/2
+</span><span class="comment">%}
+</span>num_periodograms = size(signal,2)/(N/2);
+
+<span class="comment">%initializing periodogram</span>
+
+periodogram = zeros(num_periodograms, N);
+<span class="keyword">for</span> j = 1 : num_periodograms
+
+    <span class="comment">%grabbing the next sample of length N/2</span>
+
+    signal_grabbed = signal(1 + ((j-1)*(N/2)):(N/2)+((j-1)*(N/2)));
+
+    <span class="comment">%zero padding to N</span>
+
+    added_zero = zeros(1, N/2);
+    total_signal = cat(2,signal_grabbed, added_zero);
+
+    <span class="comment">% computation of periodogram (Q = N/2)</span>
+
+    fft_total_signal = fft(total_signal,64);
+    periodogram(j, 1:N) = (1/(N))*abs(fft_total_signal).^2;
+<span class="keyword">end</span>
+
+<span class="comment">%averaging over all possible periodograms in signal</span>
+
+periodogram = (1/num_periodograms)*sum(periodogram);
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Heading
+
+%Dan Brody
+%ECE-310-Digital Signal Processing
+%Professor Keene 
+%12/15/2021
+%Project 5
+
+%*close all is used between sections because there were some errors in
+%plots leaking into different sections. set html = false if running code.
+
+html = true;
+
+clc;
+close all;
+
+load pj2data.mat
+
+%% Preliminary Plotting
+
+%plotting y and Hejw2
+
+Q = 32;
+
+figure;
+
+plot(1:512, y)
+title('y[n]')
+xlabel('n')
+
+figure;
+
+plot(1:512, Hejw2)
+title('|H(e^{jw})|^2')
+ylabel('magnitude')
+xlabel('k')
+
+
+
+%% A. Autocorrelation and MATLAB
+
+%% A.1
+
+if(html == true)
+    close all;
+end
+figure;
+
+y1_n = y(1:Q);
+
+
+plot(xcorr(y1_n, y1_n,'biased'))
+title('autocorr')
+
+y1_negative_n = fliplr(y1_n);
+
+
+figure;
+plot(conv(y1_negative_n, y1_n))
+title('alternative autocorr')
+
+%both autocorrs the same
+
+
+%before talking about what xcorr would calculate let us talk about 
+%biased vs. unbiased estimators. As opposed to biased estimators the 
+%expected value of the unbiased estimator of the estimated parameter is 
+%the parameter. The biased estimator of autocorrelation (xcorr) 
+%is (1/Q) * c_vv [m] where cvv[m] corresponding to the aperiodic correlation of 
+%a rectangularly windowed segment of x[n] of length Q. 
+%In tandem, however, the unbiased estimator is 1/(Q-|m|) * c_vv [m] 
+%so this is the equation that will be calculated when we 
+%replace ‘biased’ with ‘unbiased’.
+
+%% A.2
+
+%% (a)
+
+%The fourier transform of the autocorrelation function is the PSD (Power
+%Spectral Density) thus the output of the fourier transform must be positive and real.
+
+%% (b)
+if(html == true)
+    close all;
+end
+figure;
+
+%Following A.1 c_y1y1[m] = Q * xcorr(y1, y1, 'biased')
+
+cy1_y1 = xcorr(y1_n,y1_n,'biased');
+y_ = fft(cy1_y1,64);
+mag = abs(y_);
+phse = unwrap(angle(y_));
+
+%plotting magnitude of c_y1y1[m]
+
+
+stem(1:64,mag)
+title('magnitude of 64-point DFT')
+xlabel('k')
+ylabel('magnitude')
+
+figure;
+
+%plotting phase of c_y1y1[m]
+
+figure;
+stem(1:64, phse)
+title('phase of 64-point dft')
+xlabel('k')
+ylabel('phase')
+
+%the relationship between c_y1y1[m] and the deterministic autocorrelation is a
+%that they are the same or similar (i.e. deterministic autocorrelation = xcorr(y1,y1,'biased')).
+
+deterministic_autocorr = zeros(1, 32);
+for i = 1:32
+    deterministic_autocorr(1, i) = 1/32 * sum(y1_n(i:32).*y1_n(1:32-i+1));
+end
+
+%% (c)
+
+if(html == true)
+    close all;
+end
+
+deterministic_autocorr_1 =  cy1_y1;
+deterministic_autocorr_2 =  deterministic_autocorr;
+
+
+%verifying signal is correct by plotting both signal's phase and magnitude
+%response against each other.
+
+y1 = fft(deterministic_autocorr_1,64);
+mag1 = abs(y1);
+phse1 = (angle(y1));
+
+y2 = fft(deterministic_autocorr_2,64);
+mag2 = abs(y2);
+phse2 = (angle(y2));
+
+%magnitude response subplot
+
+subplot(2,1,1);
+stem(1:64,mag1)
+title('magnitude of 64-point DFT for Deterministic Autocorr from c_{y1y1}[m]')
+xlabel('k')
+ylabel('magnitude')
+
+
+subplot(2,1,2);
+stem(1:64,mag2)
+title('magnitude of 64-point DFT for Deterministic Autocorr')
+xlabel('k')
+ylabel('magnitude')
+
+
+%% A.3
+
+%% (a)
+if(html == true)
+    close all;
+end
+figure;
+
+stem(1:64,mag2)
+title('magnitude of 64-point DFT for Deterministic Autocorr')
+xlabel('k')
+ylabel('magnitude')
+
+%% (b)
+
+if(html == true)
+    close all;
+end
+
+y1_n_fft = fft(y1_n,64);
+disp(size(y1_n_fft))
+mag_squared_32 = abs(y1_n_fft).^2;
+figure;
+stem(1:64,mag_squared_32)
+title('magnitude squared of 64-point DFT for y1[n]')
+xlabel('k')
+ylabel('magnitude^2')
+
+%% (c)
+
+if(html == true)
+    close all;
+end
+
+y_n_fft = fft(y (1:64), 64);
+
+mag_squared_64 = abs(y_n_fft).^2;
+figure;
+stem(1:64,mag_squared_64)
+title('magnitude squared of 64-point DFT for y[n]')
+xlabel('k')
+ylabel('magnitude^2')
+
+% relationship between (a) and (b) is a factor of 1/Q where Q here is 64.
+% (i.e.) the graph of (a) = 1/Q * graph in (b) theoretically. 
+%Relationship between (b) and (c) is that (b) is the FFT of y2[n] windowed 
+%where y2[n] is the first 64 samples of y.
+
+freqresp = downsample(Hejw2,8);
+
+%% B.1
+
+if(html == true)
+    close all;
+end
+
+err = plot_against_ideal(freqresp,mag2,"Ideal PDS vs. Estimate Using DFT of \phi_{y1y1}");
+
+%% B.2
+
+Q = 1024;
+
+if(html == true)
+    close all;
+end
+
+%using idea demonstrated in A.3 in defining a periodogram
+
+fft_deterministic_autocorr_all = fft(y,1024);
+y_k_squared = abs(fft_deterministic_autocorr_all).^2;
+autocorr_estimate = (1/Q)*y_k_squared;
+
+err_trunc = plot_against_ideal(freqresp, downsample(autocorr_estimate,16), "Ideal PDS vs. Estimate Using DFT of \phi_{yy} w/ Downsampling to 64");
+
+%% B.3
+
+if(html == true)
+    close all;
+end
+
+periodogram = periodogram_averaging(y, 64);
+
+averaging_err = plot_against_ideal(freqresp, periodogram, "Ideal PDS vs. Periodogram Averaging Estimate");
+
+%There is a notable difference between B.1 and B.2. from B.3. The error for
+%B.1. and B.2. are 5.97 and 5.92 respectively whereas the error for B.3
+%is 3.1403. In addition, in looking between figures we can see that periodogram
+%averaging results in a smoother signal 
+
+%% B.4
+
+if(html == true)
+    close all;
+end
+
+autocorr_estimate = xcorr(y,y,'biased');
+centered_31 = autocorr_estimate((512-15):(512+15));
+padded_seq = cat(2,centered_31, zeros(1, 64-31));
+fft_padded_seq = abs(fft(padded_seq, 64));
+
+indirect_blackman_tukey_err = plot_against_ideal(freqresp, fft_padded_seq, "Ideal PDS vs. Indirect Blackman-Tukey Estimate");
+
+%% B.5
+
+if(html == true)
+    close all;
+end
+
+disp("Table of Errors for Different Estimators of PDS")
+
+Errors = [err;err_trunc; averaging_err; indirect_blackman_tukey_err];
+Estimators = [ "Estimate Using DFT of \phi_{y1y1}" ; "Estimate Using DFT of \phi_{yy} w/ Truncation at 64" ; "Periodogram Averaging Estimate" ; "Blackman-Tukey Estimate"];
+table(Estimators, Errors)
+
+%% (a)
+ 
+%Indirect Blackman-Tukey estimate performed the best 
+
+%% (b)
+
+%Rather than averaging several waveforms the indirect Blackman-Tukey method is taking the autocorrelation
+%estimate as the first calculation and applying a window before taking the DFT 
+%which makes the wave smoothed without averaging. The effect is we are convolving
+%the periodogram with the fourier transform of the autocorrelation window
+%thus smoothing the rapid fluctuations of the periodogram spectrum
+%estimate. Another part as to why the Indirect Blackman-Tukey method is
+%doing so well is because 0<=|m|<=15
+%approaches Q = 31 and as |m| approaches Q, fewer and
+%fewer samples of x[n] are involved in the computation of the autocorrelation estimate;
+%With less samples the variance of the autocorrelation estimate should
+%decrease . Refer to eq. 10.98(b) in the textbook for a mathematical
+%interpretation.
+
+%<information can be found on pages 850 - 851 of textbook>
+
+%% (c)
+
+if(html == true)
+    close all;
+end
+
+figure;
+
+triangular_windowed_centered_31 = (triang(31).').*centered_31;
+padded_seq = cat(2,triangular_windowed_centered_31, zeros(1, 64-31));
+fft_padded_seq = abs(fft(padded_seq,64));
+
+blackman_tukey_traingular_err = plot_against_ideal(freqresp, fft_padded_seq, "Ideal PDS vs. Indirect Blackman-Tukey Estimate (Triangular)");
+disp("Indirect Blackman-Tukey Error w/ Triangular Window : " + num2str(blackman_tukey_traingular_err))
+
+%% Comments
+%The calculation is likely different due to the specifications for each
+%respective window. For example the rectangular window has an approximate width of main
+%lobe of 4pi/(M+1) whereas the triangular/bartlett approximate width of
+%main lobe is 8pi/M, indicating that the bartlett window should have more
+%width in the mainlobe. This can easily be shown if we compare the figure
+%above and the figure calculated in B.5. 
+
+%% Functions
+
+function periodogram = periodogram_averaging(signal, N)
+%{
+    Averages N-point periodograms over the signal where # of observed values is
+    N/2
+%}
+num_periodograms = size(signal,2)/(N/2);
+
+%initializing periodogram
+
+periodogram = zeros(num_periodograms, N);
+for j = 1 : num_periodograms
+    
+    %grabbing the next sample of length N/2
+    
+    signal_grabbed = signal(1 + ((j-1)*(N/2)):(N/2)+((j-1)*(N/2)));
+    
+    %zero padding to N
+    
+    added_zero = zeros(1, N/2);
+    total_signal = cat(2,signal_grabbed, added_zero);
+    
+    % computation of periodogram (Q = N/2)
+    
+    fft_total_signal = fft(total_signal,64);
+    periodogram(j, 1:N) = (1/(N))*abs(fft_total_signal).^2;
+end
+
+%averaging over all possible periodograms in signal
+
+periodogram = (1/num_periodograms)*sum(periodogram);
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
